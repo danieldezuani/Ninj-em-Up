@@ -59,9 +59,9 @@ public class Player1 : MonoBehaviour {
         pulo = Input.GetKeyDown(KeyCode.Space);
 
         if (direita)
-            rb.velocity = new Vector2(Mathf.Abs(transform.position.x )* velocity * Time.deltaTime, 0f);
+            rb.velocity = new Vector2(Mathf.Abs(transform.position.x )+ velocity * Time.deltaTime, 0f);
         if(esquerda)
-            rb.velocity = new Vector2((Mathf.Abs(transform.position.x)* -1) * velocity * Time.deltaTime, 0f);
+            rb.velocity = new Vector2((Mathf.Abs(transform.position.x)* -1) - velocity * Time.deltaTime, 0f);
        
     }
 
