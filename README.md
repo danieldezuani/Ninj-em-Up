@@ -1,2 +1,2 @@
-# Ninj-em-Up
+# Ninj'em Up
 School Project
