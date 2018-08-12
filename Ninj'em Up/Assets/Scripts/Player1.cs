@@ -34,18 +34,19 @@ public class Player1 : MonoBehaviour {
         else
             LocalP1();
 
-        Jump();    
+            
     }
 
     void Jump()
     {
-        if (estadoPlayer == "chao" && cima || pulo)
+        if (estadoPlayer == "chao")
             rb.AddForce(Vector2.up * forcaPulo);
-        if (estadoPlayer == "Ar" && cima || pulo)
+        if (estadoPlayer == "Ar")
         {
             rb.velocity = new Vector2(rb.velocity.x, 0);
             rb.AddForce(Vector2.up * forcaPulo);
             estadoPlayer = "limiteMaxPulo";
+            print(estadoPlayer);
         }
 
     }
@@ -59,10 +60,12 @@ public class Player1 : MonoBehaviour {
         pulo = Input.GetKeyDown(KeyCode.Space);
 
         if (direita)
-            rb.velocity = new Vector2(Mathf.Abs(transform.position.x )+ velocity * Time.deltaTime, 0f);
-        if(esquerda)
-            rb.velocity = new Vector2((Mathf.Abs(transform.position.x)* -1) - velocity * Time.deltaTime, 0f);
-       
+            rb.velocity = new Vector2(velocity, rb.velocity.y);
+        if (esquerda)
+            rb.velocity = new Vector2(velocity*-1, rb.velocity.y);
+        if(cima || pulo)
+            Jump();
+
     }
 
     void LocalP1()
