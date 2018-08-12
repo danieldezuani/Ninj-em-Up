@@ -6,11 +6,14 @@ public class MainCamera : MonoBehaviour {
 
     public static string estadoCamera;
 
-    public GameObject playerAtual;
+    public Transform playerAtual;
     //public GameObject limitEsq;
     public GameObject camLimitDir;
     public GameObject limitDir;
+    public GameObject camMeio;
     public Transform mainCamera;
+
+    public float camVelocity = 1;
 
     private void Awake()
     {
@@ -19,13 +22,10 @@ public class MainCamera : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-		
-	}
+        camMeio.SetActive(false);
+    }
 
-    // Update is called once per frame
-    
-
-    void Update()
+    private void FixedUpdate()
     {
         CameraLimits();
         CameraFollow();
@@ -36,21 +36,19 @@ public class MainCamera : MonoBehaviour {
         if (estadoCamera == "none")
         {
             mainCamera.position = Vector3.Lerp(mainCamera.position, new Vector3(mainCamera.transform.position.x,
-                mainCamera.position.y, mainCamera.position.z), 1f);
+                mainCamera.position.y, mainCamera.position.z), camVelocity);
         }
 
         else if (estadoCamera == "followP1")
         {
-            //faz a camera seguir o personagem da esquerda
             mainCamera.position = Vector3.Lerp(mainCamera.position, new Vector3(playerAtual.transform.position.x + 5.5f,
-                mainCamera.position.y, mainCamera.position.z), 1f);
+                 mainCamera.position.y, mainCamera.position.z), camVelocity);
         }
 
         else if (estadoCamera == "followP2")
         {
-            //faz a camera seguir o personagem da direita
             mainCamera.position = Vector3.Lerp(mainCamera.position, new Vector3(playerAtual.transform.position.x - 5.5f,
-                mainCamera.position.y, mainCamera.position.z), 1f);
+                mainCamera.position.y, mainCamera.position.z), camVelocity);
         }
     }
 
@@ -58,7 +56,7 @@ public class MainCamera : MonoBehaviour {
     {
         if (camLimitDir.transform.position.x >= limitDir.transform.position.x)
         {
-            estadoCamera = "none";
+            camVelocity = 0f;
         }
     }
 }
