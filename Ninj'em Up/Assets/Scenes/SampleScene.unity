@@ -150,7 +150,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerAtual: {fileID: 1686831091}
-  limitEsq: {fileID: 0}
   camLimitDir: {fileID: 1295780357}
   limitDir: {fileID: 1820271493}
   mainCamera: {fileID: 519420032}
@@ -222,7 +221,7 @@ GameObject:
   - component: {fileID: 831746725}
   m_Layer: 0
   m_Name: Chao (1)
-  m_TagString: Untagged
+  m_TagString: chao
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -407,7 +406,7 @@ GameObject:
   - component: {fileID: 1658089773}
   m_Layer: 0
   m_Name: Chao
-  m_TagString: Untagged
+  m_TagString: chao
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -506,10 +505,12 @@ GameObject:
   - component: {fileID: 1686831095}
   - component: {fileID: 1686831094}
   - component: {fileID: 1686831093}
+  - component: {fileID: 1686831097}
   - component: {fileID: 1686831092}
+  - component: {fileID: 1686831096}
   m_Layer: 0
   m_Name: mario
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -618,6 +619,44 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1686831096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1686831091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11421183da9ad794baf4bfd7c67652da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  forcaPulo: 300
+  velocity: 10
+--- !u!61 &1686831097
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1686831091}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.46375751, y: 0.014052868}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 2.6953125, y: 2.7734375}
+    newSize: {x: 2.6953125, y: 2.7734375}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 1.6553698, y: 2.351838}
+  m_EdgeRadius: 0
 --- !u!1 &1820271493
 GameObject:
   m_ObjectHideFlags: 0
@@ -658,7 +697,7 @@ GameObject:
   - component: {fileID: 1976815179}
   m_Layer: 0
   m_Name: Chao (2)
-  m_TagString: Untagged
+  m_TagString: chao
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
