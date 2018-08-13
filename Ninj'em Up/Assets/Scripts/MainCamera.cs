@@ -4,59 +4,58 @@ using UnityEngine;
 
 public class MainCamera : MonoBehaviour {
 
-    public static string estadoCamera;
+    public Camera mainCamera;
+    public Transform player1;
+    public Transform player2;
+    //Transform player3;
+    //Transform player4;
 
-    public Transform playerAtual;
-    //public GameObject limitEsq;
-    public GameObject camLimitDir;
-    public GameObject limitDir;
-    public GameObject camMeio;
-    public Transform mainCamera;
-
-    public float camVelocity = 1;
-
-    private void Awake()
+    private void Start()
     {
-        estadoCamera = "followP1";
+        Menu.numPlayersMode = "2Players";
     }
 
-    // Use this for initialization
-    void Start () {
-        camMeio.SetActive(false);
-    }
-
-    private void FixedUpdate()
+    private void Update()
     {
-        CameraLimits();
-        CameraFollow();
-    }
-
-    public void CameraFollow()
-    {
-        if (estadoCamera == "none")
+        if (Menu.numPlayersMode == "SinglePlayer")
         {
-            mainCamera.position = Vector3.Lerp(mainCamera.position, new Vector3(mainCamera.transform.position.x,
-                mainCamera.position.y, mainCamera.position.z), camVelocity);
+
         }
-
-        else if (estadoCamera == "followP1")
+        else if (Menu.numPlayersMode == "2Players")
         {
-            mainCamera.position = Vector3.Lerp(mainCamera.position, new Vector3(playerAtual.transform.position.x + 5.5f,
-                 mainCamera.position.y, mainCamera.position.z), camVelocity);
+            CameraFollow2Players(mainCamera,player1,player2);
         }
-
-        else if (estadoCamera == "followP2")
+        else if (Menu.numPlayersMode == "4Players")
         {
-            mainCamera.position = Vector3.Lerp(mainCamera.position, new Vector3(playerAtual.transform.position.x - 5.5f,
-                mainCamera.position.y, mainCamera.position.z), camVelocity);
+
         }
     }
 
-    public void CameraLimits()
+    public void CameraFollow2Players(Camera cam, Transform p1, Transform p2)
     {
-        if (camLimitDir.transform.position.x >= limitDir.transform.position.x)
+        // How many units should we keep from the players
+        float zoomFactor = 1.5f;
+        float followTimeDelta = 0.8f;
+
+        // Midpoint we're after
+        Vector3 midpoint = (p1.position + p2.position) / 2f;
+
+        // Distance between objects
+        float distance = (p1.position - p2.position).magnitude;
+
+        // Move camera a certain distance
+        Vector3 cameraDestination = midpoint - cam.transform.forward * distance * zoomFactor;
+
+        // Define o o tamanho da camera de acordo com a distancia
+        if (cam.orthographic)
         {
-            camVelocity = 0f;
+            cam.orthographicSize = distance / 2f;
         }
+        // You specified to use MoveTowards instead of Slerp
+        cam.transform.position = Vector3.Slerp(cam.transform.position, cameraDestination, followTimeDelta);
+
+        // Snap when close enough to prevent annoying slerp behavior
+        if ((cameraDestination - cam.transform.position).magnitude >= 0.05f)
+            cam.transform.position = cameraDestination;
     }
 }
