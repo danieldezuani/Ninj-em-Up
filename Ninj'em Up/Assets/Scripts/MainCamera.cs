@@ -2,60 +2,87 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MainCamera : MonoBehaviour {
+//Faz com que esse código requira um componente do tipo Camera para rodar
+[RequireComponent(typeof(Camera))]
 
-    public Camera mainCamera;
-    public Transform player1;
-    public Transform player2;
-    //Transform player3;
-    //Transform player4;
+public class MainCamera : MonoBehaviour {
+    
+    //lista de alvos que a camera vai seguir
+    public List<Transform> alvos;
+
+    public Vector3 offset;
+    public float smoothTime = .5f;
+    public float minZoom = 9f;
+    public float maxZoom = 4f;
+    public float limitZoom = 10f;
+
+    private Vector3 velocidade;
+    private Camera mainCam;
 
     private void Start()
     {
-        Menu.numPlayersMode = "2Players";
+        mainCam = GetComponent<Camera>();
     }
 
-    private void Update()
+    //Utilizei o LateUpdate para que a camera só se mova depois que tudo for feito
+    private void LateUpdate()
     {
-        if (Menu.numPlayersMode == "SinglePlayer")
-        {
+        //Caso o numero de alvos seja 0 não retorna nada
+        if (alvos.Count == 0)
+            return;
 
-        }
-        else if (Menu.numPlayersMode == "2Players")
-        {
-            CameraFollow2Players(mainCamera,player1,player2);
-        }
-        else if (Menu.numPlayersMode == "4Players")
-        {
-
-        }
+        MovimentoCam();
+        ZoomCamera();
     }
 
-    public void CameraFollow2Players(Camera cam, Transform p1, Transform p2)
+    void MovimentoCam()
     {
-        // How many units should we keep from the players
-        float zoomFactor = 1.5f;
-        float followTimeDelta = 0.8f;
+        Vector3 pontoCentral = PegaPontoCentral();
 
-        // Midpoint we're after
-        Vector3 midpoint = (p1.position + p2.position) / 2f;
+        Vector3 novaPosicao = pontoCentral + offset;
 
-        // Distance between objects
-        float distance = (p1.position - p2.position).magnitude;
+        //Movimenta a camera e faz com que sua movimentacao seja mais suave com o SmoothDamp
+        transform.position = Vector3.SmoothDamp(transform.position, novaPosicao, ref velocidade, smoothTime);
+    }
 
-        // Move camera a certain distance
-        Vector3 cameraDestination = midpoint - cam.transform.forward * distance * zoomFactor;
+    //Da zoom in e out e tambem faz com que isso seja mais suave com o Lerp
+    void ZoomCamera()
+    {
+        float novoZoom = Mathf.Lerp(maxZoom, minZoom, PegaMaiorDistancia() / limitZoom);
+        mainCam.orthographicSize = Mathf.Lerp(mainCam.orthographicSize, novoZoom, Time.deltaTime);
+    }
 
-        // Define o o tamanho da camera de acordo com a distancia
-        if (cam.orthographic)
+    //faz o calculo para saber a maior distancia entre o alvos, assim sabemos ate onde a camera pode ir
+    public float PegaMaiorDistancia()
+    {
+        var bounds = new Bounds(alvos[0].position, Vector3.zero);
+
+        for (int i = 0; i < alvos.Count; i++)
         {
-            cam.orthographicSize = distance / 2f;
+            bounds.Encapsulate(alvos[i].position);
         }
-        // You specified to use MoveTowards instead of Slerp
-        cam.transform.position = Vector3.Slerp(cam.transform.position, cameraDestination, followTimeDelta);
 
-        // Snap when close enough to prevent annoying slerp behavior
-        if ((cameraDestination - cam.transform.position).magnitude >= 0.05f)
-            cam.transform.position = cameraDestination;
+        return bounds.size.x;
+    }
+
+    //pega o alvo central para ignora e retorna que ele é o centro do bound
+    Vector3 PegaPontoCentral()
+    {
+        if (alvos.Count == 1)
+        {
+            return alvos[0].position;
+        }
+
+        // pega a posicao central do primeiro alvo na lista
+        var bounds = new Bounds(alvos[0].position, Vector3.zero);
+
+        //Faz com que os alvos entrem nas bounds de acordo com quantos existem na lista
+        for (int i = 0; i < alvos.Count; i++)
+        {
+            bounds.Encapsulate(alvos[i].position);
+        }
+
+        //retorna os calculos para o centro
+        return bounds.center;
     }
 }
